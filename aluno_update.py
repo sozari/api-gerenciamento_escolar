@@ -11,15 +11,16 @@ db_password = ''
 db_name = 'gerenciamento_escolar'
 
 @app.route('/aluno_update/<string:nome>/<string:tipo_usuario>', methods=['PUT'])
-def atualizar_aluno(nome_atual, tipo_usuario):
+def atualizar_aluno(nome, tipo_usuario):  # Ajustado para coincidir com os parâmetros da URL
     dados = request.json
     senha_criptografada = generate_password_hash(dados['senha'])  # Criptografa a nova senha
+
     sql = """
         UPDATE usuarios 
         SET nome = %s, email = %s, senha = %s 
         WHERE nome = %s AND tipo_usuario = %s
     """
-    valores = (dados['nome'], dados['email'], senha_criptografada, nome_atual, tipo_usuario)
+    valores = (dados['nome'], dados['email'], senha_criptografada, nome, tipo_usuario)
 
     try:
         with mysql.connector.connect(
