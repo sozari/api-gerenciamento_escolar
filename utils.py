@@ -1,12 +1,11 @@
 import mysql.connector
-import os
 
 # Função para conectar ao banco de dados
 def connect_to_database():
-    db_host = os.getenv('localhost')
-    db_user = os.getenv('root')
-    db_password = os.getenv('')
-    db_name = os.getenv('gerenciamento_escolar')
+    db_host = 'localhost'  # Endereço do banco de dados
+    db_user = 'root'       # Usuário do banco
+    db_password = ''       # Senha do banco
+    db_name = 'gerenciamento_escolar'  # Nome do banco de dados
 
     try:
         connection = mysql.connector.connect(
