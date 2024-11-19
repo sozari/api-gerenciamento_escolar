@@ -1,19 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, Flask, request, jsonify
 import mysql.connector
 from werkzeug.security import generate_password_hash
 
-app = Flask(__name__)
+from utils import connect_to_database
 
-# Configurações do banco de dados
-db_host = 'localhost'
-db_user = 'root'
-db_password = ''
-db_name = 'gerenciamento_escolar'
+aluno_update_bp = Blueprint('aluno_update',__name__)
+
 
 @app.route('/aluno_update/<string:nome>/<string:tipo_usuario>', methods=['PUT'])
 def atualizar_aluno(nome, tipo_usuario):  # Ajustado para coincidir com os parâmetros da URL
     dados = request.json
     senha_criptografada = generate_password_hash(dados['senha'])  # Criptografa a nova senha
+    connection = connect_to_database()
 
     sql = """
         UPDATE usuarios 
@@ -23,9 +21,7 @@ def atualizar_aluno(nome, tipo_usuario):  # Ajustado para coincidir com os parâ
     valores = (dados['nome'], dados['email'], senha_criptografada, nome, tipo_usuario)
 
     try:
-        with mysql.connector.connect(
-            host=db_host, user=db_user, password=db_password, database=db_name
-        ) as mydb:
+        with connection as mydb:
             mycursor = mydb.cursor()
             mycursor.execute(sql, valores)
             mydb.commit()
@@ -33,5 +29,4 @@ def atualizar_aluno(nome, tipo_usuario):  # Ajustado para coincidir com os parâ
     except mysql.connector.Error as error:
         return jsonify({'error': str(error)}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
