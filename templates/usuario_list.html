@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+</head>
+<body>
+    <h1>Lista de Usuários</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Tipo de Usuário</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="usuarios-tabela">
+            <!-- Usuários serão carregados aqui via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Carregar lista de usuários usando fetch
+        fetch('/usuario_list')
+            .then(response => response.json())
+            .then(usuarios => {
+                const tabelaUsuarios = document.getElementById("usuarios-tabela");
+                usuarios.forEach(usuario => {
+                    const linha = document.createElement("tr");
+                    linha.innerHTML = `
+                        <td>${usuario.idusuario}</td>
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.tipo_usuario}</td>
+                        <td>
+                            <button onclick="editarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Editar</button>
+                            <button onclick="deletarUsuario(${usuario.idusuario}, '${usuario.tipo_usuario}')">Excluir</button>
+                        </td>
+                    `;
+                    tabelaUsuarios.appendChild(linha);
+                });
+            })
+            .catch(error => console.error('Erro ao carregar os usuários:', error));
+
+        function editarUsuario(idusuario, tipo_usuario) {
+            // Redireciona para a página de edição passando ID e tipo_usuario
+            window.location.href = `/aluno_update/${idusuario}/${tipo_usuario}`;
+        }
+
+        function deletarUsuario(idusuario, tipo_usuario) {
+            if (confirm("Tem certeza que deseja excluir?")) {
+                fetch(`/aluno_delete/${idusuario}/${tipo_usuario}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Usuário excluído com sucesso!");
+                        location.reload(); // Atualiza a página para refletir as mudanças
+                    } else {
+                        alert("Erro ao excluir o usuário.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir o usuário:', error);
+                    alert('Erro ao excluir o usuário.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

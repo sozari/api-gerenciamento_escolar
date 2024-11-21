@@ -14,23 +14,27 @@ def deletar_aluno(idusuario, tipo_usuario):
 
             # Verifica se o tipo_usuario é 'aluno'
             if tipo_usuario == 'aluno':
-                # Deleta o registro correspondente na tabela 'aluno'
+                # Deletar o registro relacionado na tabela aluno
                 delete_aluno_sql = "DELETE FROM aluno WHERE idusuario = %s"
                 mycursor.execute(delete_aluno_sql, (idusuario,))
                 
-                # Verifica se algum registro foi excluído
+                # Verificar se o registro na tabela 'aluno' foi excluído
                 if mycursor.rowcount == 0:
-                    return jsonify({'mensagem': 'Nenhum aluno encontrado com este ID.'}), 404
-
-                # Deleta o registro na tabela 'usuarios'
+                    return jsonify({'mensagem': 'Nenhum aluno encontrado com este ID na tabela aluno.'}), 404
+                
+                # Agora, deletar o registro correspondente na tabela 'usuarios'
                 delete_usuario_sql = "DELETE FROM usuarios WHERE idusuario = %s AND tipo_usuario = %s"
                 mycursor.execute(delete_usuario_sql, (idusuario, tipo_usuario))
+
+                # Verifica se algum registro foi excluído
+                if mycursor.rowcount == 0:
+                    return jsonify({'mensagem': 'Nenhum aluno encontrado com este ID na tabela usuarios.'}), 404
 
             else:
                 return jsonify({'mensagem': 'O tipo de usuário informado não é "aluno".'}), 400
 
             mydb.commit()
-            return jsonify({'mensagem': 'Aluno excluído com sucesso!'}), 200
+            return jsonify({'mensagem': 'Aluno e seus dados excluídos com sucesso!'}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

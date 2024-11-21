@@ -31,5 +31,3 @@ def aluno_update(idusuario, tipo_usuario):  # Ajustado para coincidir com os par
             return jsonify({'mensagem': 'Dados do aluno atualizados com sucesso!'}), 200
     except mysql.connector.Error as error:
         return jsonify({'error': str(error)}), 500
-
-
