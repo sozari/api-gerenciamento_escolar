@@ -10,6 +10,7 @@ from adm_cadastro import adm_cadastro_bp
 from adm_delete import adm_delete_bp
 from adm_update import adm_update_bp
 from professor_update import professor_update_bp
+from professor_delete import professor_delete_bp
 
 
 app = Flask(__name__)
@@ -24,6 +25,8 @@ app.register_blueprint(adm_cadastro_bp)
 app.register_blueprint(adm_delete_bp)
 app.register_blueprint(adm_update_bp)
 app.register_blueprint(professor_update_bp)
+app.register_blueprint(professor_delete_bp)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
