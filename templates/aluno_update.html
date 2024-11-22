@@ -1,45 +1,26 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Aluno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Administrador</title>
 </head>
 <body>
-    <form action="/aluno_update/13/aluno" method="POST" id="updateForm">
-        <input type="text" name="nome" placeholder="Nome" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button type="submit">Atualizar</button>
+    <h1>Editar Administrador</h1>
+
+    <!-- Formulário de Edição (Com método POST) -->
+    <form action="/adm_update/{{idusuario}}/{{tipo_usuario}}" method="POST">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" value="{{usuario.nome}}" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{usuario.email}}" required><br><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required><br><br>
+
+        <button type="submit">Salvar Alterações</button>
     </form>
 
-    <script>
-        const form = document.getElementById('updateForm');
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-            const jsonData = {};
-            formData.forEach((value, key) => {
-                jsonData[key] = value;
-            });
-
-            fetch('/aluno_update/13/aluno', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(jsonData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                alert('Dados atualizados!');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Erro ao atualizar dados.');
-            });
-        });
-    </script>
 </body>
 </html>

@@ -22,12 +22,12 @@ def listar_usuarios():
     try:
         with get_db_connection() as mydb:
             mycursor = mydb.cursor()
-            mycursor.execute("SELECT idusuario, nome, tipo_usuario FROM usuarios")
+            mycursor.execute("SELECT idusuario, nome, email, tipo_usuario FROM usuarios")
             usuarios = mycursor.fetchall()
 
             # Criar uma lista de dicionários para retornar como JSON
             lista_usuarios = [
-                {'idusuario': usuario[0], 'nome': usuario[1], 'tipo_usuario': usuario[2]}
+                {'idusuario': usuario[0], 'nome': usuario[1], 'email': usuario[2], 'tipo_usuario': usuario[3]}
                 for usuario in usuarios
             ]
             return jsonify(lista_usuarios), 200
