@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import mysql.connector
 from werkzeug.security import generate_password_hash
 
-adm_update_bp = Blueprint('adm_update_bp', __name__)
+professor_update_bp = Blueprint('professor_update_bp', __name__)
 
 # Configurações do banco de dados
 db_host = 'localhost'
@@ -10,11 +10,11 @@ db_user = 'root'
 db_password = ''
 db_name = 'gerenciamento_escolar'
 
-@adm_update_bp.route('/adm_update/<int:idusuario>/<string:tipo_usuario>', methods=['PUT'])
+@professor_update_bp.route('/professor_update/<int:idusuario>/<string:tipo_usuario>', methods=['PUT'])
 def atualizar_aluno(idusuario, tipo_usuario):
     # Verifica se o tipo_usuario é "administrador"
-    if tipo_usuario != 'administrador':
-        return jsonify({'mensagem': 'Atualização permitida apenas para administradores.'}), 403
+    if tipo_usuario != 'professor':
+        return jsonify({'mensagem': 'Atualização permitida apenas para professores.'}), 403
 
     dados = request.json
     senha_criptografada = generate_password_hash(dados['senha'])  # Criptografa a nova senha
@@ -33,9 +33,9 @@ def atualizar_aluno(idusuario, tipo_usuario):
             mycursor = mydb.cursor()
             mycursor.execute(sql, valores)
             if mycursor.rowcount == 0:  # Nenhum registro atualizado
-                return jsonify({'mensagem': 'Nenhum administrador encontrado com este ID e tipo de usuário.'}), 404
+                return jsonify({'mensagem': 'Nenhum professor encontrado com este ID e tipo de usuário.'}), 404
 
             mydb.commit()
-            return jsonify({'mensagem': 'Dados do administrador atualizados com sucesso!'}), 200
+            return jsonify({'mensagem': 'Dados do professor atualizados com sucesso!'}), 200
     except mysql.connector.Error as error:
         return jsonify({'error': str(error)}), 500

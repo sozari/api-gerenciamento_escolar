@@ -1,44 +1,55 @@
-from flask import Flask, request, jsonify
-import mysql.connector
+from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
+from utils import connect_to_database
 
-app = Flask(__name__)
+usuario_update_bp = Blueprint('usuario_update_bp', __name__)
 
-# Configurações do banco de dados
-db_host = 'localhost'
-db_user = 'root'
-db_password = ''
-db_name = 'gerenciamento_escolar'
+# Rota para editar o usuário
+@usuario_update_bp.route('/usuario_update/<int:idusuario>', methods=['GET', 'PUT'])
+def usuario_update(idusuario):
+    if request.method == 'GET':
+        # Buscar o usuário no banco para editar
+        try:
+            connection = connect_to_database()
+            cursor = connection.cursor(dictionary=True)
 
-@app.route('/aluno_update/<int:idusuario>/<string:tipo_usuario>', methods=['PUT'])
-def atualizar_aluno(idusuario, tipo_usuario):
-    # Verifica se o tipo_usuario é "aluno"
-    if tipo_usuario != 'aluno':
-        return jsonify({'mensagem': 'Atualização permitida apenas para alunos.'}), 403
+            # Seleciona os dados do usuário pelo id
+            cursor.execute("SELECT idusuario, nome, email FROM usuarios WHERE idusuario = %s", (idusuario,))
+            usuario = cursor.fetchone()
 
-    dados = request.json
-    senha_criptografada = generate_password_hash(dados['senha'])  # Criptografa a nova senha
+            if usuario is None:
+                return jsonify({'mensagem': 'Usuário não encontrado.'}), 404
+            
+            return jsonify(usuario), 200  # Retorna os dados do usuário para edição
+        except Exception as e:
+            return jsonify({'erro': str(e)}), 500
 
-    sql = """
-        UPDATE usuarios 
-        SET nome = %s, email = %s, senha = %s 
-        WHERE idusuario = %s AND tipo_usuario = %s
-    """
-    valores = (dados['nome'], dados['email'], senha_criptografada, idusuario, tipo_usuario)
+    if request.method == 'PUT':
+        dados = request.json
+        nome = dados.get('nome')
+        email = dados.get('email')
+        senha = dados.get('senha')
 
-    try:
-        with mysql.connector.connect(
-            host=db_host, user=db_user, password=db_password, database=db_name
-        ) as mydb:
-            mycursor = mydb.cursor()
-            mycursor.execute(sql, valores)
-            if mycursor.rowcount == 0:  # Nenhum registro atualizado
-                return jsonify({'mensagem': 'Nenhum aluno encontrado com este ID e tipo de usuário.'}), 404
+        if not nome or not email or not senha:
+            return jsonify({'mensagem': 'Todos os campos são obrigatórios.'}), 400
 
-            mydb.commit()
-            return jsonify({'mensagem': 'Dados do aluno atualizados com sucesso!'}), 200
-    except mysql.connector.Error as error:
-        return jsonify({'error': str(error)}), 500
+        senha_criptografada = generate_password_hash(senha)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        try:
+            connection = connect_to_database()
+            cursor = connection.cursor()
+
+            # Atualiza os dados do usuário no banco
+            cursor.execute("""
+                UPDATE usuarios
+                SET nome = %s, email = %s, senha = %s
+                WHERE idusuario = %s
+            """, (nome, email, senha_criptografada, idusuario))
+
+            if cursor.rowcount == 0:
+                return jsonify({'mensagem': 'Nenhum usuário encontrado com esse ID.'}), 404
+
+            connection.commit()
+            return jsonify({'mensagem': 'Dados do usuário atualizados com sucesso!'}), 200
+        except Exception as e:
+            return jsonify({'erro': str(e)}), 500

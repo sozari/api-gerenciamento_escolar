@@ -1,64 +1,43 @@
-from flask import Flask, render_template, request, redirect, url_for
-import mysql.connector
+from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
+from utils import connect_to_database
+import mysql.connector
 
-app = Flask(__name__)
+aluno_cadastro_bp = Blueprint('aluno_cadastro_bp', __name__)
 
-# Configurações do banco de dados
-db_host = 'localhost'
-db_user = 'root'
-db_password = ''
-db_name = 'gerenciamento_escolar'
-
-# Rota para processar o formulário
-@app.route('/aluno_cadastro', methods=['POST'])
+@aluno_cadastro_bp.route('/aluno_cadastro', methods=['POST'])
 def submit_formulario():
+    # Capturando os dados do formulário
     nome = request.form['nome']
     email = request.form['email']
     senha = request.form['senha']
     telefone_responsavel = request.form['telefone_responsavel']
 
+    # Validando campos obrigatórios
     if not nome or not email or not senha or not telefone_responsavel:
-        return "Todos os campos são obrigatórios!"
+        return jsonify({'mensagem': 'Todos os campos são obrigatórios!'}), 400
 
+    # Criptografando a senha
     senha_hash = generate_password_hash(senha)
 
+    # Preparando as queries SQL
+    sql_usuario = "INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (%s, %s, %s, %s)"
+    sql_aluno = "INSERT INTO aluno (idusuario, telefone_responsavel) VALUES (%s, %s)"
+
     try:
-        # Conectar ao banco de dados
-        connection = mysql.connector.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            database=db_name
-        )
-        cursor = connection.cursor()
+        # Conectando ao banco de dados
+        with connect_to_database() as mydb:
+            mycursor = mydb.cursor()
 
-        # Primeiro, inserir o usuário para gerar um idusuario
-        sql_usuario = "INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql_usuario, (nome, email, senha_hash, 'aluno'))
-        idusuario = cursor.lastrowid  # Pega o ID do usuário recém-criado
+            # Inserindo usuário na tabela 'usuarios'
+            mycursor.execute(sql_usuario, (nome, email, senha_hash, 'aluno'))
+            idusuario = mycursor.lastrowid  # Obtendo o ID gerado
 
-        # Inserir o aluno com o idusuario gerado
-        sql_aluno = "INSERT INTO aluno (idusuario, telefone_responsavel) VALUES (%s, %s)"
-        cursor.execute(sql_aluno, (idusuario, telefone_responsavel))
-        connection.commit()
+            # Inserindo na tabela 'aluno' com o ID gerado
+            mycursor.execute(sql_aluno, (idusuario, telefone_responsavel))
+            mydb.commit()
 
-    except mysql.connector.Error as err:
-        print(f"Erro ao conectar ao banco de dados: {err}")
-        return "Erro ao processar os dados. Tente novamente mais tarde."
+            return jsonify({'mensagem': 'Dados do aluno cadastrados com sucesso!'}), 201
 
-    finally:
-        if cursor:
-            cursor.close()
-        if connection.is_connected():
-            connection.close()
-
-    return redirect(url_for('sucesso'))
-
-# Rota para página de sucesso
-@app.route('/sucesso')
-def sucesso():
-    return 'Dados inseridos com sucesso!'
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    except mysql.connector.Error as error:
+        return jsonify({'error': f'Erro ao processar os dados: {str(error)}'}), 500
