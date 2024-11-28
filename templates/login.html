@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="..\static\css\style_login.css">
+    <title>Login - GERS</title>
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Lado esquerdo (Texto GERS) -->
+        <div class="left">
+            <h1>GERS</h1>
+        </div>
+
+        <!-- Lado direito (Login) -->
+        <div class="right">
+            <form>
+                <h2>Login</h2>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+                
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                
+                <button type="submit">Confirmar</button>
+                
+                <p class="register-link">
+                    Não tem conta? <a href="/templates/usuario_lista.html">Cadastre-se</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

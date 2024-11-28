@@ -1,6 +1,4 @@
-/* static/css/style.css */
-
-/* Reset and general styles */
+/* Reset Básico */
 * {
     margin: 0;
     padding: 0;
@@ -9,17 +7,16 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f5f5f5;
 }
 
-/* Container setup */
+/* Container Principal */
 .container {
     display: flex;
-    width: 100%;
     height: 100vh;
 }
 
-/* Sidebar styles */
+/* Menu Lateral */
 .sidebar {
     background-color: #004d4d;
     color: white;
@@ -27,8 +24,6 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Fixa a altura da sidebar */
-    position: fixed; /* Mantém a sidebar fixa no lado esquerdo */
 }
 
 .logo {
@@ -37,143 +32,122 @@ body {
     text-align: center;
 }
 
-.menu ul {
+.sidebar nav ul {
     list-style: none;
     padding: 0;
 }
 
-.menu li {
-    margin-bottom: 15px;
+.sidebar nav li {
+    margin: 10px 0;
 }
 
-.menu a {
+.sidebar nav a {
     color: white;
     text-decoration: none;
     font-size: 18px;
     display: block;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 4px;
 }
 
-.menu a:hover {
+.sidebar nav a:hover {
     background-color: #006666;
 }
 
-/* Main content styles */
-.main-content {
-    margin-left: 250px; /* Cria espaço para a sidebar */
+/* Conteúdo Principal */
+.content {
     flex: 1;
     padding: 20px;
-    background-color: #f5f5f5;
-    overflow-y: auto; /* Permite rolagem no conteúdo principal */
+    overflow-y: auto;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.content h1, .content h2 {
+    color: #333;
     margin-bottom: 20px;
 }
 
-.header input {
-    padding: 5px 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-}
-
-.user-info img {
-    border-radius: 50%;
-    margin-left: 10px;
-}
-
-/* Dashboard styles */
-.dashboard {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Tabela de usuários */
-#usuarios-tabela {
+/* Tabela de Usuários */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-#usuarios-tabela th, #usuarios-tabela td {
+table th, table td {
     padding: 12px;
+    border: 1px solid #ddd;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
-#usuarios-tabela th {
+table th {
     background-color: #004d4d;
     color: white;
 }
 
-#usuarios-tabela tr:hover {
-    background-color: #f1f1f1;
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-button {
-    padding: 5px 10px;
-    margin-right: 5px;
-    background-color: #4CAF50;
-    color: white;
+table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Botões */
+.btn {
+    padding: 6px 12px;
     border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    border-radius: 4px;
+    color: white;
+    background-color: #007BFF;
+    text-decoration: none;
+    font-size: 14px;
 }
 
-button:hover {
-    background-color: #45a049;
+.btn:hover {
+    background-color: #0056b3;
 }
 
-#formulario-edicao {
-    background-color: #fff;
+.btn.delete {
+    background-color: #DC3545;
+}
+
+.btn.delete:hover {
+    background-color: #a71d2a;
+}
+
+/* Formulário de Edição */
+form {
+    background-color: white;
     padding: 20px;
-    border: 1px solid #ddd;
-    width: 100%;
-    margin-top: 30px;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
 }
 
-#formulario-edicao h2 {
-    margin-bottom: 15px;
-}
-
-#formulario-edicao label {
+form label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: bold;
 }
 
-#formulario-edicao input {
+form input {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-#formulario-edicao button {
-    background-color: #008CBA;
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
     border-radius: 4px;
-    font-size: 16px;
+    cursor: pointer;
 }
 
-#formulario-edicao button:hover {
-    background-color: #007B9E;
+form button:hover {
+    background-color: #45a049;
 }

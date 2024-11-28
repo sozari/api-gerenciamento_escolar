@@ -1,168 +1,83 @@
-   
-<!-- templates/usuario_lista.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="..\static\css\style.css">
+    <link rel="stylesheet" type="text/css" href="..\static\css\style_lista.css">
+    <title>Painel de Usuários</title>
+    
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
+        <!-- Menu Lateral -->
         <aside class="sidebar">
-            <h1 class="logo">SMART</h1>
-            <nav class="menu">
+            <h1 class="logo">GEI</h1>
+            <nav>
                 <ul>
                     <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">All Courses</a></li>
-                    <li><a href="#">My Classes</a></li>
-                    <li><a href="#">Students</a></li>
-                    <li><a href="#">Schedule</a></li>
-                    <li><a href="#">Messages</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Cursos</a></li>
+                    <li><a href="#">Minhas Turmas</a></li>
+                    <li><a href="#">Alunos</a></li>
+                    <li><a href="#">Horários</a></li>
+                    <li><a href="#">Mensagens</a></li>
+                    <li><a href="#">Configurações</a></li>
                 </ul>
             </nav>
         </aside>
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <header class="header">
-                <h2>Usuários</h2>
-                <div class="search-user">
-                    <input type="text" id="search" placeholder="Search">
-                    <div class="user-info">
-                        <span>Admin User</span>
-                        <img src="https://via.placeholder.com/40" alt="User">
-                    </div>
-                </div>
-            </header>
-            <section class="dashboard">
-                <h3>Lista de Usuários</h3>
-                <table id="usuarios-tabela">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Tipo de Usuário</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Usuários serão carregados aqui via JavaScript -->
-                    </tbody>
-                </table>
 
-                <!-- Formulário de Edição -->
-                <div id="formulario-edicao">
-                    <h2>Editar Usuário</h2>
-                    <form id="editar-form">
-                        <input type="hidden" id="idusuario" name="idusuario">
-                        <label for="nome">Nome:</label>
-                        <input type="text" id="nome" name="nome" required><br>
+        <!-- Conteúdo Principal -->
+        <div class="content">
+            <h1>Usuários</h1>
+            <!-- Tabela de Usuários -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Tipo de Usuário</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>16</td>
+                        <td>João Almeida</td>
+                        <td>joao@email.com</td>
+                        <td>Professor</td>
+                        <td>
+                            <a href="#" class="btn">Editar</a>
+                            <a href="#" class="btn delete">Excluir</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>19</td>
+                        <td>Html</td>
+                        <td>html@email.com</td>
+                        <td>Aluno</td>
+                        <td>
+                            <a href="#" class="btn">Editar</a>
+                            <a href="#" class="btn delete">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required><br>
-
-                        <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" required><br>
-
-                        <button type="submit">Salvar Alterações</button>
-                    </form>
-                </div>
-            </section>
+            <!-- Formulário de Edição -->
+            <h2>Editar Usuário</h2>
+            <form>
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" placeholder="Digite o nome">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Digite o email">
+                
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" placeholder="Digite a senha">
+                
+                <button type="submit">Salvar Alterações</button>
+            </form>
         </div>
     </div>
-
-    <script>
-        // Função para carregar a lista de usuários
-        fetch('/usuario_list')
-            .then(response => response.json())
-            .then(usuarios => {
-                console.log(usuarios); // Para depuração
-                const tabelaUsuarios = document.querySelector("#usuarios-tabela tbody");
-                usuarios.forEach(usuario => {
-                    console.log(usuario); // Para depuração
-                    const linha = document.createElement("tr");
-                    linha.innerHTML = `
-                        <td>${usuario.idusuario}</td>
-                        <td>${usuario.nome}</td>
-                        <td>${usuario.email || 'Não informado'}</td>
-                        <td>${usuario.tipo_usuario}</td>
-                        <td>
-                            <button onclick="editarUsuario(${usuario.idusuario}, '${usuario.nome.replace(/'/g, "\\'")}', '${usuario.email.replace(/'/g, "\\'")}')">Editar</button>
-                            <button onclick="deletarUsuario(${usuario.idusuario})">Excluir</button>
-                        </td>
-                    `;
-                    tabelaUsuarios.appendChild(linha);
-                });
-            })
-            .catch(error => console.error('Erro ao carregar os usuários:', error));
-
-        // Função para editar o usuário
-        function editarUsuario(idusuario, nome, email) {
-            document.getElementById('idusuario').value = idusuario;
-            document.getElementById('nome').value = nome;
-            document.getElementById('email').value = email;
-            document.getElementById('senha').value = ''; // Limpa a senha
-            window.scrollTo(0, document.body.scrollHeight); // Rola para o formulário de edição
-        }
-
-        // Função para deletar o usuário
-        function deletarUsuario(idusuario) {
-            if (confirm("Tem certeza que deseja excluir?")) {
-                fetch(`/usuario_delete/${idusuario}`, {
-                    method: 'DELETE',
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.mensagem) {
-                        alert(data.mensagem);
-                        location.reload(); // Atualiza a tabela
-                    } else {
-                        alert("Erro ao excluir o usuário.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao excluir o usuário:', error);
-                    alert('Erro ao excluir o usuário.');
-                });
-            }
-        }
-
-        // Função para enviar o formulário de edição
-        document.getElementById('editar-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const idusuario = document.getElementById('idusuario').value;
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
-
-            fetch(`/usuario_update/${idusuario}`, {
-                method: 'POST',
-                body: new URLSearchParams({
-                    'nome': nome,
-                    'email': email,
-                    'senha': senha
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.mensagem) {
-                    alert(data.mensagem);
-                    location.reload(); // Atualiza a tabela
-                } else {
-                    alert("Erro ao atualizar os dados.");
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao editar o usuário:', error);
-                alert('Erro ao editar o usuário.');
-            });
-        });
-    </script>
 </body>
 </html>
