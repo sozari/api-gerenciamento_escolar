@@ -107,11 +107,11 @@ table tr:hover {
     background-color: #0056b3;
 }
 
-.btn.delete {
+.btn-delete {
     background-color: #DC3545;
 }
 
-.btn.delete:hover {
+.btn-delete:hover {
     background-color: #a71d2a;
 }
 
