@@ -1,10 +1,17 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 from werkzeug.security import generate_password_hash
 from utils import connect_to_database
 import mysql.connector
 
+# Definindo o Blueprint
 aluno_cadastro_bp = Blueprint('aluno_cadastro_bp', __name__)
 
+# Rota para exibir o formulário de cadastro de aluno
+@aluno_cadastro_bp.route('/aluno_cadastro', methods=['GET'])
+def mostrar_formulario():
+    return render_template('cadastro_aluno.html')  # Certifique-se de que o arquivo 'cadastro_aluno.html' está na pasta templates
+
+# Rota para processar os dados do formulário via POST
 @aluno_cadastro_bp.route('/aluno_cadastro', methods=['POST'])
 def submit_formulario():
     # Capturando os dados do formulário
@@ -37,7 +44,8 @@ def submit_formulario():
             mycursor.execute(sql_aluno, (idusuario, telefone_responsavel))
             mydb.commit()
 
-            return jsonify({'mensagem': 'Dados do aluno cadastrados com sucesso!'}), 201
+            # Após o cadastro, redireciona para o formulário novamente
+            return redirect(url_for('aluno_cadastro_bp.mostrar_formulario'))
 
     except mysql.connector.Error as error:
         return jsonify({'error': f'Erro ao processar os dados: {str(error)}'}), 500

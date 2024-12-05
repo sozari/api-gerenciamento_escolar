@@ -35,10 +35,15 @@ app.register_blueprint(usuario_list_bp)
 
 
 
+'''
+@app.route('/', methods=['GET'])
+def inicial():
+    return render_template('usuario_list.html')'''
+
 
 @app.route('/', methods=['GET'])
 def inicial():
-    return render_template('usuario_list.html')
+    return render_template('inicial.html')
 
 
 if __name__ == '__main__':

@@ -1,59 +1,39 @@
-from flask import Blueprint, request, redirect, url_for
-import mysql.connector
+from flask import Blueprint, request, jsonify, render_template
 from werkzeug.security import generate_password_hash
+import mysql.connector
+from utils import connect_to_database
 
 adm_cadastro_bp = Blueprint('adm_cadastro_bp', __name__)
 
-# Configurações do banco de dados
-db_host = 'localhost'
-db_user = 'root'
-db_password = ''
-db_name = 'gerenciamento_escolar'
+# Rota para exibir o formulário de cadastro de administrador
+@adm_cadastro_bp.route('/adm_cadastro', methods=['GET'])
+def mostrar_formulario_adm():
+    return render_template('adm_cadastro.html')
 
-def get_db_connection():
-    return mysql.connector.connect(
-        host=db_host,
-        user=db_user,
-        password=db_password,
-        database=db_name
-    )
-
-# Rota para processar o formulário de cadastro de administrador
+# Rota para processar os dados do formulário via POST
 @adm_cadastro_bp.route('/adm_cadastro', methods=['POST'])
-def cadastro_professor():
+def submit_formulario_adm():
     nome = request.form['nome']
     email = request.form['email']
     senha = request.form['senha']
 
-    # Verificar se todos os campos foram preenchidos
     if not nome or not email or not senha:
-        return "Todos os campos são obrigatórios!"
+        return jsonify({'mensagem': 'Todos os campos são obrigatórios!'}), 400
 
-    # Gerar hash da senha
     senha_hash = generate_password_hash(senha)
 
+    sql_usuario = "INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (%s, %s, %s, %s)"
+    sql_adm = "INSERT INTO administrador (idusuario) VALUES (%s)"
+
     try:
-        # Conectar ao banco de dados
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        with connect_to_database() as mydb:
+            mycursor = mydb.cursor()
+            mycursor.execute(sql_usuario, (nome, email, senha_hash, 'administrador'))
+            idusuario = mycursor.lastrowid
+            mycursor.execute(sql_adm, (idusuario,))
+            mydb.commit()
 
-        # Inserir o usuário na tabela 'usuarios'
-        sql_usuario = "INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql_usuario, (nome, email, senha_hash, 'administrador'))
-        connection.commit()
+            return jsonify({'mensagem': 'Dados do administrador cadastrados com sucesso!'}), 201
 
-    except mysql.connector.Error as err:
-        print(f"Erro ao conectar ao banco de dados: {err}")
-        return f"Erro ao processar os dados: {err}"
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection.is_connected():
-            connection.close()
-
-    return redirect(url_for('adm_cadastro_bp.sucesso'))  # Correção aqui!
-
-@adm_cadastro_bp.route('/sucesso')
-def sucesso():
-    return 'Dados inseridos com sucesso!'
+    except mysql.connector.Error as error:
+        return jsonify({'error': f'Erro ao processar os dados: {str(error)}'}), 500
