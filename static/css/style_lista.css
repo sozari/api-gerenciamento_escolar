@@ -155,3 +155,55 @@ form button:hover {
 
 
 
+
+/* Estilo da barra lateral */
+.sidebar {
+    background-color: #004d4d; /* Verde escuro */
+    color: white;
+    width: 250px;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+.sidebar .menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar .menu li {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.sidebar .menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 8px 0;
+}
+
+/* Submenu oculto inicialmente */
+.sidebar .menu .submenu {
+    display: none;
+    list-style: none;
+    margin-top: 10px;
+    margin-left: 15px;
+    padding-left: 10px;
+    border-left: 1px solid #ddd;
+}
+
+.sidebar .menu .submenu li {
+    margin-bottom: 10px;
+}
+
+.sidebar .menu .submenu a {
+    font-size: 16px;
+    color: #ddd;
+}
+
+/* Exibir submenu ao passar o mouse */
+.sidebar .menu li:hover .submenu {
+    display: block;
+}

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style_formulario.css">
     <title>Cadastro de Aluno</title>
 </head>
 <body>
     <h2>Formulário de Cadastro de Aluno</h2>
-    <form action="/aluno_cadastro" method="post">
+    <form action="/professor_cadastro" method="post">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
         <br><br>
@@ -17,8 +18,8 @@
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha" required>
         <br><br>
-        <label for="telefone_responsavel">Telefone do Responsável:</label>
-        <input type="text" id="telefone_responsavel" name="telefone_responsavel" required>
+        <label for="telefone">Telefone do Responsável:</label>
+        <input type="text" id="telefone" name="telefone" required>
         <br><br>
         <input type="submit" value="Cadastrar">
     </form>

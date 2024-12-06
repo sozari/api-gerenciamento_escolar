@@ -11,24 +11,21 @@
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <h1 class="logo">SMART</h1>
+            <h1 class="logo">CLASSIFY</h1>
             <nav class="menu">
                 <ul>
-                    <li><a href="inicial.html">Inicio</a></li>
-                    <li><a href="../usuario_list.html">Usuários</a></li>
-                    <li><a href="#">My Classes</a></li>
+                    <li><a href="../usuario_list.html">Tabela de Usuários</a></li>
                     <li>
                         <a href="#" class="submenu-toggle">Cadastros</a>
                         <ul class="submenu">
-                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario_adm') }}">Cadastro de Administradores</a></li>
+                            <li><a href="{{ url_for('adm_cadastro_bp.mostrar_formulario') }}">Cadastro de Administradores</a></li>
                             <li><a href="{{ url_for('aluno_cadastro_bp.mostrar_formulario') }}">Cadastro de Alunos</a></li>
-                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario_professor') }}">Cadastro de Professores</a></li>
+                            <li><a href="{{ url_for('professor_cadastro_bp.mostrar_formulario') }}">Cadastro de Professores</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">Students</a></li>
-                    <li><a href="#">Schedule</a></li>
-                    <li><a href="#">Messages</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Turmas</a></li>
+                    <li><a href="#">Caixa de entrada</a></li>
+                    <li><a href="#">Configurações</a></li>
                 </ul>
             </nav>
         </aside>
